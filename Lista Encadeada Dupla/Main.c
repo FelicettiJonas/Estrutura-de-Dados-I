@@ -33,20 +33,24 @@ int main()
     li = alocaMemoriaListaDinamica();
     el = alocaMemoriaElemento();
 
-    validador(insereElemento(li, 55, NULL));
-    validador(insereElemento(li, 66, li->head));
-    validador(insereElemento(li, 77, li->tail));
+    validador(insereElemento(li, 10, NULL));
+    validador(insereElemento(li, 20, li->tail));
+    validador(insereElemento(li, 30, li->head));
+    validador(insereElemento(li, 25, NULL));
+    validador(insereElemento(li, 35, li->head));
 
     percorreListaHeadTail(li);
     percorreListaTailHead(li);
 
-    el = buscarElementoHeadTail(li, 55);
-
-    validador(removeElemento(li, el));
-
+    validador(removeElemento(li, NULL));
+    validador(removeElemento(li, li->tail));
     validador(removeElemento(li, li->head));
 
     percorreListaHeadTail(li);
+
+    // el = buscarElementoHeadTail(li, 55);
+
+    // validador(removeElemento(li, el));
 
     limpaLista(li);
     return 0;
