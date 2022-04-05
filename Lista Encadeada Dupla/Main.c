@@ -22,7 +22,7 @@ int removeElemento(Lista *, Elemento *);
 void percorreListaHeadTail(Lista *);
 void percorreListaTailHead(Lista *);
 Elemento *buscarElementoHeadTail(Lista *, int);
-Elemento *buscarElementobuscarElementoTailHead(Lista *, int);
+Elemento *buscarElementoTailHead(Lista *, int);
 void limpaLista(Lista *);
 
 int main()
@@ -33,20 +33,29 @@ int main()
     li = alocaMemoriaListaDinamica();
     el = alocaMemoriaElemento();
 
-    validador(insereElemento(li, 10, NULL));
-    validador(insereElemento(li, 20, li->tail));
-    validador(insereElemento(li, 30, li->head));
-    validador(insereElemento(li, 25, NULL));
+    validador(insereElemento(li, 15, li->tail));
+    validador(insereElemento(li, 25, li->tail));
+    validador(insereElemento(li, 10, li->head));
+    validador(insereElemento(li, 35, NULL));
     validador(insereElemento(li, 35, li->head));
+    validador(insereElemento(li, 27, buscarElementoHeadTail(li, 10)));
+    validador(insereElemento(li, 29, li->tail));
+    validador(insereElemento(li, 45, NULL));
 
     percorreListaHeadTail(li);
     percorreListaTailHead(li);
 
-    validador(removeElemento(li, NULL));
     validador(removeElemento(li, li->tail));
     validador(removeElemento(li, li->head));
+    validador(removeElemento(li, NULL));
+    validador(removeElemento(li, buscarElementoHeadTail(li, 55)));
+    validador(removeElemento(li, buscarElementoHeadTail(li, 27)));
+    validador(removeElemento(li, li->head));
+    validador(removeElemento(li, buscarElementoHeadTail(li, 10)));
 
+    percorreListaTailHead(li);
     percorreListaHeadTail(li);
+
 
     // el = buscarElementoHeadTail(li, 55);
 
@@ -210,7 +219,6 @@ Elemento *buscarElementoHeadTail(Lista *li, int data)
     {
         if (aux->data == data)
         {
-            printf("\n O dado %i esta na lista na posicao %i", data, cont);
             return aux;
         }
         cont++;
@@ -228,7 +236,6 @@ Elemento *buscarElementoTailHead(Lista *li, int data)
     {
         if (aux->data == data)
         {
-            printf("\nO dado %i esta na lista na posicao %i", data, cont);
             return aux;
         }
         cont++;
@@ -244,5 +251,4 @@ void limpaLista(Lista *li)
     }
 
     free(li);
-    printf("\nLista limpa com sucesso!");
 }
