@@ -17,9 +17,7 @@ Lista *Espera;
 
 int main()
 {
-    // Lista *estacionamento;
     Estacionamento = alocaMemoriaListaDinamica();
-    // Lista *espera;
     Espera = alocaMemoriaListaDinamica();
     comando("C", 10);
     comando("C", 20);
