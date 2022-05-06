@@ -49,14 +49,14 @@ Elemento *alocaMemoriaElemento()
     // Procedimento para alocar memoria
     Elemento *el;
     el = (Elemento *)malloc(sizeof(Elemento));
-    el->data = NULL;
+    el->data = '\0';
     el->next = NULL;
     el->prev = NULL;
 
     return el;
 }
 
-int insereElemento(Lista *li, char *data, Elemento *pivo)
+int insereElemento(Lista *li, char data, Elemento *pivo)
 {
     Elemento *el;
     el = alocaMemoriaElemento();
@@ -141,7 +141,7 @@ void percorreListaHeadTail(Lista *li)
     printf("\n");
     while (aux != NULL)
     {
-        printf("%i  ", aux->data);
+        printf("%c  ", aux->data);
         aux = aux->next;
     }
 }
@@ -154,12 +154,12 @@ void percorreListaTailHead(Lista *li)
     printf("\n");
     while (aux != NULL)
     {
-        printf("%i  ", aux->data);
+        printf("%c  ", aux->data);
         aux = aux->prev;
     }
 }
 
-Elemento *buscarElementoHeadTail(Lista *li, char *data)
+Elemento *buscarElementoHeadTail(Lista *li, char data)
 {
     Elemento *aux;
     aux = li->head;
@@ -176,7 +176,7 @@ Elemento *buscarElementoHeadTail(Lista *li, char *data)
     }
 }
 
-Elemento *buscarElementoTailHead(Lista *li, char *data)
+Elemento *buscarElementoTailHead(Lista *li, char data)
 {
     Elemento *aux;
     aux = li->tail;
