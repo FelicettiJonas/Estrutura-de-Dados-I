@@ -56,7 +56,6 @@ int main()
     percorreListaTailHead(li);
     percorreListaHeadTail(li);
 
-
     // el = buscarElementoHeadTail(li, 55);
 
     // validador(removeElemento(li, el));

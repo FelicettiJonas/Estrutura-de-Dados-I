@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 typedef struct sElemento
 {
     struct sElemento *next;
@@ -14,6 +13,21 @@ typedef struct sLista
     Elemento *head, *tail;
     int size;
 } Lista;
+
+typedef struct sElementoHash
+{
+    struct sElementoHash *next;
+    struct sElementoHash *prev;
+    int chave;
+    Elemento *head, *tail;
+    int size;
+} ElementoHash;
+
+typedef struct sListaHash
+{
+    ElementoHash *head, *tail;
+    int size;
+} ListaHash;
 
 int validador(int erro)
 {
@@ -44,6 +58,18 @@ Lista *alocaMemoriaListaDinamica()
     return li;
 }
 
+ListaHash *alocaMemoriaListaHash()
+{
+    // Procedimento para alocar memoria
+    ListaHash *li;
+    li = (ListaHash *)malloc(sizeof(ListaHash));
+    li->head = NULL;
+    li->tail = NULL;
+    li->size = 0;
+
+    return li;
+}
+
 Elemento *alocaMemoriaElemento()
 {
     // Procedimento para alocar memoria
@@ -56,7 +82,22 @@ Elemento *alocaMemoriaElemento()
     return el;
 }
 
-int insereElemento(Lista *li, char *data, Elemento *pivo)
+Elemento *alocaMemoriaElementoHash()
+{
+    // Procedimento para alocar memoria
+    ElementoHash *el;
+    el = (ElementoHash *)malloc(sizeof(ElementoHash));
+    el->chave = NULL;
+    el->next = NULL;
+    el->prev = NULL;
+    el->head = NULL;
+    el->tail = NULL;
+    el->size = 0;
+
+    return el;
+}
+
+int insereElemento(ElementoHash *li, char *data, Elemento *pivo)
 {
     Elemento *el;
     el = alocaMemoriaElemento();
@@ -94,7 +135,45 @@ int insereElemento(Lista *li, char *data, Elemento *pivo)
     return 0;
 }
 
-int removeElemento(Lista *li, Elemento *el)
+int insereElementoHash(ListaHash *li, int chave, ElementoHash *pivo)
+{
+    ElementoHash *el;
+    el = alocaMemoriaElementoHash();
+    el->chave = chave;
+
+    if ((pivo == NULL) && (li->size > 0))
+    {
+        return 1;
+    }
+
+    if (li->size == 0)
+    {
+        li->head = el;
+        li->tail = el;
+    }
+
+    else
+    {
+        el->next = pivo->next;
+        el->prev = pivo;
+
+        if (pivo->next == NULL)
+        {
+            li->tail = el;
+        }
+        else
+        {
+            pivo->next->prev = el;
+        }
+
+        pivo->next = el;
+    }
+
+    li->size++;
+    return 0;
+}
+
+int removeElemento(ElementoHash *li, Elemento *el)
 {
     if ((el != NULL) && (li->size > 0))
     {
@@ -133,7 +212,59 @@ int removeElemento(Lista *li, Elemento *el)
     }
 }
 
-void percorreListaHeadTail(Lista *li)
+int removeElementoHash(ListaHash *li, ElementoHash *el)
+{
+    if ((el != NULL) && (li->size > 0))
+    {
+        if (el == li->head) // Se for o primeiro elemento da lista
+        {
+            li->head = el->next;
+            if (li->head == NULL) // verifica se a lista ficou vazia
+            {
+                li->tail = NULL;
+            }
+            else
+            {
+                el->next->prev = NULL;
+            }
+        }
+        else
+        {
+            el->prev->next = el->next;
+            if (el->next == NULL) // Verifica se é o ultimo elemento da lista
+            {
+                li->tail = el->prev;
+            }
+            else
+            {
+                el->next->prev = el->prev;
+            }
+        }
+
+        free(el);
+        li->size--;
+        return 0;
+    }
+    else
+    {
+        return 2;
+    }
+}
+
+void percorreListaHash(ListaHash *li)
+{
+    ElementoHash *aux;
+    aux = li->head;
+
+    printf("\n");
+    while (aux != NULL)
+    {
+        printf("chave: %i  /  tamanho: %i \n", aux->chave, aux->size);
+        aux = aux->next;
+    }
+}
+
+void percorreElementoHash(ElementoHash *li)
 {
     Elemento *aux;
     aux = li->head;
@@ -141,25 +272,25 @@ void percorreListaHeadTail(Lista *li)
     printf("\n");
     while (aux != NULL)
     {
-        printf("%c  ", aux->data);
+        printf("%s  \n", aux->data);
         aux = aux->next;
     }
 }
 
-void percorreListaTailHead(Lista *li)
-{
-    Elemento *aux;
-    aux = li->tail;
+// void percorreListaTailHead(Lista *li)
+// {
+//     Elemento *aux;
+//     aux = li->tail;
 
-    printf("\n");
-    while (aux != NULL)
-    {
-        printf("%c  ", aux->data);
-        aux = aux->prev;
-    }
-}
+//     printf("\n");
+//     while (aux != NULL)
+//     {
+//         printf("%c  ", aux->data);
+//         aux = aux->prev;
+//     }
+// }
 
-Elemento *buscarElementoHeadTail(Lista *li, char data)
+Elemento *buscarElemento(ElementoHash *li, char data)
 {
     Elemento *aux;
     aux = li->head;
@@ -176,22 +307,39 @@ Elemento *buscarElementoHeadTail(Lista *li, char data)
     }
 }
 
-Elemento *buscarElementoTailHead(Lista *li, char data)
+ElementoHash *buscarElementoHash(ListaHash *li, int chave)
 {
-    Elemento *aux;
-    aux = li->tail;
+    ElementoHash *aux;
+    aux = li->head;
     int cont = 0;
 
     while (aux != NULL)
     {
-        if (aux->data == data)
+        if (aux->chave == chave)
         {
             return aux;
         }
         cont++;
-        aux = aux->prev;
+        aux = aux->next;
     }
 }
+
+// Elemento *buscarElementoTailHead(Lista *li, char data)
+// {
+//     Elemento *aux;
+//     aux = li->tail;
+//     int cont = 0;
+
+//     while (aux != NULL)
+//     {
+//         if (aux->data == data)
+//         {
+//             return aux;
+//         }
+//         cont++;
+//         aux = aux->prev;
+//     }
+// }
 
 void limpaLista(Lista *li)
 {
