@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 
 typedef struct sElemento
 {
@@ -82,12 +84,12 @@ Elemento *alocaMemoriaElemento()
     return el;
 }
 
-Elemento *alocaMemoriaElementoHash()
+ElementoHash *alocaMemoriaElementoHash()
 {
     // Procedimento para alocar memoria
     ElementoHash *el;
     el = (ElementoHash *)malloc(sizeof(ElementoHash));
-    el->chave = NULL;
+    el->chave = 0;
     el->next = NULL;
     el->prev = NULL;
     el->head = NULL;
@@ -277,32 +279,17 @@ void percorreElementoHash(ElementoHash *li)
     }
 }
 
-// void percorreListaTailHead(Lista *li)
-// {
-//     Elemento *aux;
-//     aux = li->tail;
-
-//     printf("\n");
-//     while (aux != NULL)
-//     {
-//         printf("%c  ", aux->data);
-//         aux = aux->prev;
-//     }
-// }
-
-Elemento *buscarElemento(ElementoHash *li, char data)
+Elemento *buscarElemento(ElementoHash *li, char *data)
 {
     Elemento *aux;
     aux = li->head;
-    int cont = 0;
 
     while (aux != NULL)
     {
-        if (aux->data == data)
+        if (strcmp(aux->data, data) == 0)
         {
             return aux;
         }
-        cont++;
         aux = aux->next;
     }
 }
@@ -324,29 +311,22 @@ ElementoHash *buscarElementoHash(ListaHash *li, int chave)
     }
 }
 
-// Elemento *buscarElementoTailHead(Lista *li, char data)
-// {
-//     Elemento *aux;
-//     aux = li->tail;
-//     int cont = 0;
-
-//     while (aux != NULL)
-//     {
-//         if (aux->data == data)
-//         {
-//             return aux;
-//         }
-//         cont++;
-//         aux = aux->prev;
-//     }
-// }
-
-void limpaLista(Lista *li)
+void limpaLista(ListaHash *li)
 {
+    ElementoHash *aux;
     while (li->head != NULL)
-    {
-        removeElemento(li, li->head);
+    {   
+        aux = li->head;
+        limpaElementoHash(li, li->head);
     }
 
     free(li);
+}
+void limpaElementoHash(ListaHash *li, ElementoHash *el){
+    while (el->head != NULL)
+    {
+        removeElemento(el, el->head);
+    }
+
+    removeElementoHash(li, el);
 }

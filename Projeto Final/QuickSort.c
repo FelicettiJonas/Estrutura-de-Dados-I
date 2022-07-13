@@ -3,90 +3,62 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include "ListaDupla.c"
+// #include "ListaDupla.c"
 
 // function to swap elements
-void swap(int *a, int *b)
+void swap(Elemento *a, Elemento *b)
 {
-  int t = *a;
-  *a = *b;
-  *b = t;
+  Elemento *t;
+  t = alocaMemoriaElemento();
+  t->data = a->data;
+  a->data = b->data;
+  b->data = t->data;
 }
 
 // function to find the partition position
-int partition(int array[], int low, int high)
+Elemento *partition(Elemento *inicio, Elemento *final)
 {
 
   // select the rightmost element as pivot
-  int pivot = array[high];
+  Elemento *pivot = final;
 
   // pointer for greater element
-  int i = (low - 1);
+  Elemento *i = inicio;
+  Elemento *j = inicio;
 
   // traverse each element of the array
   // compare them with the pivot
-  for (int j = low; j < high; j++)
+  while (j != pivot)
   {
-    if (array[j] <= pivot)
-    {
-
-      // if element smaller than pivot is found
-      // swap it with the greater element pointed by i
-      i++;
-
-      // swap element at i with element at j
-      swap(&array[i], &array[j]);
+    if(strcmp(j->data, pivot->data) < 0){
+      swap(i, j);
+      i = i->next;
     }
+    j = j->next;
   }
 
   // swap the pivot element with the greater element at i
-  swap(&array[i + 1], &array[high]);
+  swap(i, pivot);
+
 
   // return the partition point
-  return (i + 1);
+  return (i);
 }
 
-void quickSort(int array[], int low, int high)
+void quickSort(ElementoHash *li, Elemento *inicio, Elemento *fim)
 {
-  if (low < high)
+  if (inicio != fim && inicio != NULL && fim != NULL && inicio != fim->next)
   {
 
     // find the pivot element such that
     // elements smaller than pivot are on left of pivot
     // elements greater than pivot are on right of pivot
-    int pi = partition(array, low, high);
+    Elemento *pi = partition(inicio, fim);
 
     // recursive call on the left of pivot
-    quickSort(array, low, pi - 1);
+    quickSort(li, inicio, pi->prev);
 
     // recursive call on the right of pivot
-    quickSort(array, pi + 1, high);
+    quickSort(li, pi->next, fim);
   }
-}
-
-// function to print array elements
-void printArray(int array[], int size)
-{
-  for (int i = 0; i < size; ++i)
-  {
-    printf("%d  ", array[i]);
-  }
-  printf("\n");
-}
-
-// main function
-int main()
-{
-  int data[] = {8, 7, 2, 1, 0, 9, 6};
-
-  int n = sizeof(data) / sizeof(data[0]);
-
-  printf("Unsorted Array\n");
-  printArray(data, n);
-
-  // perform quicksort on data
-  quickSort(data, 0, n - 1);
-
-  printf("Sorted array in ascending order: \n");
-  printArray(data, n);
 }
